@@ -23,8 +23,13 @@ namespace Fluffy.Ini
                     object propertyValue = info.GetValue(target);
                     foreach (PropertyInfo attribute in propertyValue.GetType().GetRuntimeProperties())
                     {
-                        if (!attribute.GetCustomAttributes().Any(a => a is FluffyIgnore))
+                        IEnumerable<Attribute> attributes = attribute.GetCustomAttributes();
+                        if (!attributes.Any(a => a is FluffyIgnore))
                         {
+                            FluffyComment comment = (FluffyComment)attributes.FirstOrDefault(a => a is FluffyComment);
+                            if (comment != null)
+                                writer.WriteComment(comment.Content);
+
                             writer.WriteAttribute(attribute.Name, attribute.GetValue(propertyValue).ToString());
                         }
                     }

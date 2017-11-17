@@ -18,6 +18,11 @@ namespace Fluffy.Ini
             builder.AppendLine($"{attribute}={value}");
         }
 
+        internal void WriteComment(string comment)
+        {
+            builder.AppendLine($"# {comment}");
+        }
+
         internal void EndSection()
         {
             builder.AppendLine();
