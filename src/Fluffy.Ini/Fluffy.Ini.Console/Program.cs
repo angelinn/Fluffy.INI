@@ -1,6 +1,7 @@
 ﻿using Fluffy.Ini.Attributes;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,6 +11,8 @@ namespace Fluffy.Ini.Console
     public class Settings
     {
         public int Volume { get; set; }
+
+        [FluffyComment("Wow, a comment!")]
         public string Name { get; set; }
     }
 
@@ -33,6 +36,8 @@ namespace Fluffy.Ini.Console
                     Volume = 99
                 }
             });
+
+            File.WriteAllText("config.ini", ini);
         }
     }
 }
