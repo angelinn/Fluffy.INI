@@ -44,6 +44,11 @@ namespace Fluffy.Ini
             T target = Activator.CreateInstance<T>();
 
             IEnumerable<PropertyInfo> sections = FluffyTypeReflector.GetSectionTypes<T>();
+            if (sections.Count() == 0)
+            {
+                ReadAttributes(target, typeof(T), reader, lines, 1);
+                return target;
+            }
 
             for (int i = 0; i < lines.Length; ++i)
             {
@@ -52,34 +57,42 @@ namespace Fluffy.Ini
                 if (reader.TryGetSection(lines[i], out string section))
                 {
                     PropertyInfo currentSection = sections.FirstOrDefault(s => s.Name == section);
-                    currentSection.SetValue(target, Activator.CreateInstance(currentSection.PropertyType));
+                    object obj = Activator.CreateInstance(currentSection.PropertyType);
+                    currentSection.SetValue(target, obj);
                     ++i;
 
-                    IEnumerable<PropertyInfo> attributes = FluffyTypeReflector.GetAttributeTypes(currentSection.PropertyType);
-
-                    while (true)
-                    {
-                        if (i >= lines.Length || reader.IsSection(lines[i]))
-                        {
-                            --i;
-                            break;
-                        }
-
-                        lines[i] = lines[i].Trim();
-
-                        foreach (KeyValuePair<string, string> att in reader.GetAttributes(lines[i]))
-                        {
-                            PropertyInfo currentAttribute = attributes.FirstOrDefault(a => a.Name == att.Key);
-
-                            if (currentAttribute != null)
-                                currentAttribute.SetValue(currentSection.GetValue(target), Convert.ChangeType(att.Value, currentAttribute.PropertyType));
-                        }
-                        ++i;
-                    }
+                    i = ReadAttributes(obj, currentSection.PropertyType, reader, lines, i);
                 }
             }
 
             return target;
+        }
+
+        private static int ReadAttributes(object target, Type type, FluffyReader reader, string[] lines, int i)
+        {
+            IEnumerable<PropertyInfo> attributes = FluffyTypeReflector.GetAttributeTypes(type);
+
+            while (true)
+            {
+                if (i >= lines.Length || reader.IsSection(lines[i]))
+                {
+                    --i;
+                    break;
+                }
+
+                lines[i] = lines[i].Trim();
+
+                foreach (KeyValuePair<string, string> att in reader.GetAttributes(lines[i]))
+                {
+                    PropertyInfo currentAttribute = attributes.FirstOrDefault(a => a.Name == att.Key);
+
+                    if (currentAttribute != null)
+                        currentAttribute.SetValue(target, Convert.ChangeType(att.Value, currentAttribute.PropertyType));
+                }
+                ++i;
+            }
+
+            return i;
         }
 
         private static void WriteAttributes(object propertyValue, FluffyWriter writer)

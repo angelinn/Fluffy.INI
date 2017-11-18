@@ -25,6 +25,21 @@ namespace Fluffy.Ini.Tests
         }
 
         [Test]
+        public void DeserializeOneLevelObject()
+        {
+            OneLevelObject oneLevel = new OneLevelObject
+            {
+                OneSettings = 69,
+                OtherSettings = 123
+            };
+
+            string ini = FluffyConverter.SerializeObject(oneLevel).Trim().Replace("\r\n", "\n");
+            OneLevelObject deserialized = FluffyConverter.DeserializeObject<OneLevelObject>(ini);
+
+            Assert.AreEqual(oneLevel, deserialized);
+        }
+
+        [Test]
         public void SerializeTwoLevelObject()
         {
             TwoLevelObject testObj = new TwoLevelObject();
