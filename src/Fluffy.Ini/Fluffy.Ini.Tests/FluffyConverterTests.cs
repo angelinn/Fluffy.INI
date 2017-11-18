@@ -56,14 +56,21 @@ namespace Fluffy.Ini.Tests
         [Test]
         public void SerializeFluffyIgnore()
         {
+            string ini = FluffyConverter.SerializeObject(new { Settings = new FluffyIgnoreObject { Meta = "Some metadata", Value = 99 } }).Trim().Replace("\r\n", "\n");
+            string original = File.ReadAllText(BuildIniFilePath("SerializeFluffyIgnore.ini")).Trim().Replace("\r\n", "\n");
 
+            Assert.AreEqual(original, ini);
         }
 
 
         [Test]
         public void DeserializeFluffyIgnore()
         {
+            string original = File.ReadAllText(BuildIniFilePath("DeserializeFluffyIgnore.ini")).Trim().Replace("\r\n", "\n");
+            RootObject root = FluffyConverter.DeserializeObject<RootObject>(original);
 
+            Assert.AreEqual(root.Settings.Value, 99);
+            Assert.IsNull(root.Settings.Meta);
         }
 
         private string BuildIniFilePath(string file)
