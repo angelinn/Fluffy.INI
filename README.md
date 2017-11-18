@@ -94,3 +94,6 @@ Volume=80
 
 ## Why?
 I was working on a project at work that needed a configuration file. This project was using .NET Standard 1.4 and I could not find a suitable library that could serialize a class to an ini file. So, there we go!
+
+## License
+This project is licensed under the terms of the MIT license.
