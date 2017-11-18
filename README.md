@@ -15,6 +15,8 @@ The main class is FluffyConverter.
 
 **Sure.**
 
+### Serialization
+
 * Single section
 
 Example:
@@ -90,6 +92,12 @@ Resolution=1920x1080
 [Volume]
 Volume=80
 
+```
+
+### Deserialization
+```C#
+string ini = File.ReadAllText("config.ini");
+Settings settings = FluffyConverter.DeserializeObject<Settings>(ini);
 ```
 
 ## Why?
