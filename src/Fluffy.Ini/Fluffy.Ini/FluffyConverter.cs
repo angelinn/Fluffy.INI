@@ -13,28 +13,20 @@ namespace Fluffy.Ini
         public static string SerializeObject<T>(T target) where T : class
         {
             FluffyWriter writer = new FluffyWriter();
-            
-            foreach (PropertyInfo info in typeof(T).GetRuntimeProperties())
+
+            foreach (PropertyInfo section in FluffyTypeReflector.GetSectionTypes<T>())
             {
-                if (!info.GetCustomAttributes().Any(a => a is FluffyIgnore) && info.PropertyType.GetTypeInfo().IsClass)
+                writer.WriteSection(section.Name);
+
+                object propertyValue = section.GetValue(target);
+                foreach (PropertyInfo attribute in FluffyTypeReflector.GetAttributeTypes(propertyValue.GetType()))
                 {
-                    writer.WriteSection(info.Name);
+                    if (FluffyTypeReflector.TryGetComment(attribute, out FluffyComment comment))
+                        writer.WriteComment(comment.Content);
 
-                    object propertyValue = info.GetValue(target);
-                    foreach (PropertyInfo attribute in propertyValue.GetType().GetRuntimeProperties())
-                    {
-                        IEnumerable<Attribute> attributes = attribute.GetCustomAttributes();
-                        if (!attributes.Any(a => a is FluffyIgnore))
-                        {
-                            FluffyComment comment = (FluffyComment)attributes.FirstOrDefault(a => a is FluffyComment);
-                            if (comment != null)
-                                writer.WriteComment(comment.Content);
-
-                            writer.WriteAttribute(attribute.Name, attribute.GetValue(propertyValue).ToString());
-                        }
-                    }
-                    writer.EndSection();
+                    writer.WriteAttribute(attribute.Name, attribute.GetValue(propertyValue).ToString());
                 }
+                writer.EndSection();
             }
 
             return writer.GetIniString();
@@ -47,7 +39,7 @@ namespace Fluffy.Ini
             string[] lines = iniContent.Split('\n');
             T target = Activator.CreateInstance<T>();
 
-            IEnumerable<PropertyInfo> sections = GetSectionTypes<T>();
+            IEnumerable<PropertyInfo> sections = FluffyTypeReflector.GetSectionTypes<T>();
 
             for (int i = 0; i < lines.Length; ++i)
             {
@@ -59,7 +51,7 @@ namespace Fluffy.Ini
                     currentSection.SetValue(target, Activator.CreateInstance(currentSection.PropertyType));
                     ++i;
 
-                    IEnumerable<PropertyInfo> attributes = GetAttributeTypes(currentSection.PropertyType);
+                    IEnumerable<PropertyInfo> attributes = FluffyTypeReflector.GetAttributeTypes(currentSection.PropertyType);
 
                     while (true)
                     {
@@ -84,17 +76,6 @@ namespace Fluffy.Ini
             }
 
             return target;
-        }
-
-        private static IEnumerable<PropertyInfo> GetSectionTypes<T>()
-        {
-            return typeof(T).GetRuntimeProperties().Where(p => !p.GetCustomAttributes()
-                                                    .Any(a => a is FluffyIgnore) && p.PropertyType.GetTypeInfo().IsClass);
-        }
-
-        private static IEnumerable<PropertyInfo> GetAttributeTypes(Type type)
-        {
-            return type.GetRuntimeProperties().Where(p => !p.GetCustomAttributes().Any(a => a is FluffyIgnore));
         }
     }
 }
