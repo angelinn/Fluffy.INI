@@ -30,6 +30,20 @@ namespace Fluffy.Ini.Tests
             Assert.AreEqual(original, ini);
         }
 
+        [Test]
+        public void DeserializeTwoLevelObject()
+        {
+            TwoLevelObject testObj = new TwoLevelObject();
+            testObj.OneSection.OneSettings = 10;
+            testObj.OneSection.OtherSettings = 20;
+            testObj.OtherSection.OneSettings = 30;
+            testObj.OtherSection.OtherSettings = 40;
+
+            string ini = FluffyConverter.SerializeObject(testObj).Trim();
+            TwoLevelObject deserialized = FluffyConverter.DeserializeObject<TwoLevelObject>(ini);
+            Assert.AreEqual(testObj, deserialized);
+        }
+
         private string BuildIniFilePath(string file)
         {
             return $"{AppDomain.CurrentDomain.BaseDirectory}\\ResultFiles\\{file}";

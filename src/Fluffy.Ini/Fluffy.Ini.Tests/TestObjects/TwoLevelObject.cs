@@ -10,5 +10,11 @@ namespace Fluffy.Ini.Tests.TestObjects
     {
         public OneLevelObject OneSection { get; set; } = new OneLevelObject();
         public OneLevelObject OtherSection { get; set; } = new OneLevelObject();
+
+        public override bool Equals(object obj)
+        {
+            TwoLevelObject other = obj as TwoLevelObject;
+            return OneSection.Equals(other.OneSection) && OtherSection.Equals(other.OtherSection);
+        }
     }
 }
