@@ -15,7 +15,7 @@ namespace Fluffy.Ini
             Match sectionMatch = Regex.Match(line, SECTION_REGEX);
             value = null;
 
-            if (sectionMatch == null)
+            if (!sectionMatch.Success)
                 return false;
 
             value = sectionMatch?.Groups[1].Value;
