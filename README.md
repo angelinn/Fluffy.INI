@@ -7,10 +7,45 @@ Fluffy.Ini is a .NET Standard and .NET Framework serializer that converts classe
 ## How to use?
 The main class is FluffyConverter.
 
+### Two types of configuration are available 
+* Single section - one class with primitive types
+* Multiple sections - one root class with section classes as properties
 
-* How do I make my classes good for serialization?
+*Can you say that again?*
 
-The way the serializer works is - you need one class for the root object and one class per section with only primitive types.
+**Sure.**
+
+* Single section
+
+Example:
+
+```C#
+public class Settings
+{
+    public string Resolution { get; set; }
+    public int Volume { get; set; }
+}
+
+Settings settings = new Settings
+{
+       Resolution = "1920x1080",
+       Volume = 80
+};
+
+string ini = FluffyConverter.SerializeObject(settings);
+File.WriteAllText("config.ini", ini);
+```
+
+produces
+
+```ini
+[Settings]
+Resolution=1920x1080
+Volume=80
+
+```
+
+* Multiple sections - one class for the root object and one class per section with only primitive types.
 
 Example:
 
@@ -30,9 +65,7 @@ public class Settings
     public DisplaySettings Display { get; set; }
     public VolumeSettings Volume { get; set; }
 }
-```
-* Serializing example
-```C#
+
 Settings settings = new Settings
 {
     Display = new DisplaySettings
@@ -48,8 +81,8 @@ Settings settings = new Settings
 string ini = FluffyConverter.SerializeObject(settings);
 File.WriteAllText("config.ini", ini);
 ```
+produces
 
-The code produces the following config.ini:
 ```ini
 [Display]
 Resolution=1920x1080
