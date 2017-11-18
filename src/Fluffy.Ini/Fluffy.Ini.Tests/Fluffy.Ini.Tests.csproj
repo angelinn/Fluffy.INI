@@ -45,11 +45,15 @@
   <ItemGroup>
     <Compile Include="FluffyConverterTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestObjects\CommentObject.cs" />
     <Compile Include="TestObjects\OneLevelObject.cs" />
     <Compile Include="TestObjects\TwoLevelObject.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="ResultFiles\SerializeComment.ini">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="ResultFiles\SerializeTwoLevelObject.ini">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

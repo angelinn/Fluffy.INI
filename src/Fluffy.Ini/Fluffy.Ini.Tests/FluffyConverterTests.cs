@@ -44,6 +44,28 @@ namespace Fluffy.Ini.Tests
             Assert.AreEqual(testObj, deserialized);
         }
 
+        [Test]
+        public void SerializeComment()
+        {
+            string ini = FluffyConverter.SerializeObject(new { Settings = new CommentObject { Value = 99 } }).Trim().Replace("\r\n", "\n");
+            string original = File.ReadAllText(BuildIniFilePath("SerializeComment.ini")).Trim().Replace("\r\n", "\n");
+
+            Assert.AreEqual(original, ini);
+        }
+
+        [Test]
+        public void SerializeFluffyIgnore()
+        {
+
+        }
+
+
+        [Test]
+        public void DeserializeFluffyIgnore()
+        {
+
+        }
+
         private string BuildIniFilePath(string file)
         {
             return $"{AppDomain.CurrentDomain.BaseDirectory}\\ResultFiles\\{file}";
