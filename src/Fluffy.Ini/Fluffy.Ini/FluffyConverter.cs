@@ -10,9 +10,6 @@ namespace Fluffy.Ini
 {
     public static class FluffyConverter
     {
-        private const string SECTION_REGEX = @"\[(.*)\]";
-        private const string ATTRIBUTE_REGEX = @"(.*)=(.*)";
-
         public static string SerializeObject<T>(T target) where T : class
         {
             FluffyWriter writer = new FluffyWriter();
@@ -45,6 +42,8 @@ namespace Fluffy.Ini
 
         public static T DeserializeObject<T>(string iniContent) where T : class
         {
+            FluffyReader reader = new FluffyReader();
+
             string[] lines = iniContent.Split('\n');
             T target = Activator.CreateInstance<T>();
 
@@ -53,36 +52,28 @@ namespace Fluffy.Ini
             for (int i = 0; i < lines.Length; ++i)
             {
                 lines[i] = lines[i].Trim();
-                Match sectionMatch = Regex.Match(lines[i], SECTION_REGEX);
-                string section = sectionMatch?.Groups[1].Value;
 
-                PropertyInfo currentSection = sections.FirstOrDefault(s => s.Name == section);
-                if (currentSection != null)
+                if (reader.TryGetSection(lines[i], out string section))
                 {
+                    PropertyInfo currentSection = sections.FirstOrDefault(s => s.Name == section);
                     currentSection.SetValue(target, Activator.CreateInstance(currentSection.PropertyType));
                     ++i;
 
-                    IEnumerable<PropertyInfo> attributes = currentSection.PropertyType.GetRuntimeProperties();
+                    IEnumerable<PropertyInfo> attributes = GetAttributeTypes(currentSection.PropertyType);
 
                     while (i + 1 < lines.Length)
                     {
-                        if (Regex.IsMatch(lines[i], SECTION_REGEX))
+                        if (reader.IsSection(lines[i]))
                             break;
 
                         lines[i] = lines[i].Trim();
 
-                        MatchCollection matches = Regex.Matches(lines[i], ATTRIBUTE_REGEX);
-                        foreach (Match att in matches)
+                        foreach (KeyValuePair<string, string> att in reader.GetAttributes(lines[i]))
                         {
-                            if (att.Groups.Count != 3)
-                                throw new Exception($"Expected 3 groups, got {att.Groups.Count}");
-
-                            PropertyInfo currentAttribute = attributes.FirstOrDefault(a => a.Name == att.Groups[1].Value);
+                            PropertyInfo currentAttribute = attributes.FirstOrDefault(a => a.Name == att.Key);
 
                             if (currentAttribute != null)
-                            {
-                                currentAttribute.SetValue(currentSection.GetValue(target), Convert.ChangeType(att.Groups[2].Value, currentAttribute.PropertyType));
-                            }
+                                currentAttribute.SetValue(currentSection.GetValue(target), Convert.ChangeType(att.Value, currentAttribute.PropertyType));
                         }
                         ++i;
                     }
@@ -98,9 +89,9 @@ namespace Fluffy.Ini
                                                     .Any(a => a is FluffyIgnore) && p.PropertyType.GetTypeInfo().IsClass);
         }
 
-        private static IEnumerable<PropertyInfo> GetAttributeTypes<T>()
+        private static IEnumerable<PropertyInfo> GetAttributeTypes(Type type)
         {
-            return typeof(T).GetRuntimeProperties().Where(p => !p.GetCustomAttributes().Any(a => a is FluffyIgnore));
+            return type.GetRuntimeProperties().Where(p => !p.GetCustomAttributes().Any(a => a is FluffyIgnore));
         }
     }
 }
