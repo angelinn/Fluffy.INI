@@ -61,10 +61,13 @@ namespace Fluffy.Ini
 
                     IEnumerable<PropertyInfo> attributes = GetAttributeTypes(currentSection.PropertyType);
 
-                    while (i + 1 < lines.Length)
+                    while (true)
                     {
-                        if (reader.IsSection(lines[i]))
+                        if (i >= lines.Length || reader.IsSection(lines[i]))
+                        {
+                            --i;
                             break;
+                        }
 
                         lines[i] = lines[i].Trim();
 
