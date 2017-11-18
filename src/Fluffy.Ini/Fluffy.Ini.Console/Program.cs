@@ -27,17 +27,20 @@ namespace Fluffy.Ini.Console
     {
         static void Main(string[] args)
         {
-            string ini = FluffyConverter.SerializeObject(new IniFile
-            {
-                Wut = "hi",
-                Settings = new Settings
-                {
-                    Name = "Wow Settings!",
-                    Volume = 99
-                }
-            });
+            //string ini = FluffyConverter.SerializeObject(new IniFile
+            //{
+            //    Wut = "hi",
+            //    Settings = new Settings
+            //    {
+            //        Name = "Wow Settings!",
+            //        Volume = 99
+            //    }
+            //});
 
-            File.WriteAllText("config.ini", ini);
+            // File.WriteAllText("config.ini", ini);
+
+            string ini = File.ReadAllText("config.ini");
+            IniFile file = FluffyConverter.DeserializeObject<IniFile>(ini);
         }
     }
 }
