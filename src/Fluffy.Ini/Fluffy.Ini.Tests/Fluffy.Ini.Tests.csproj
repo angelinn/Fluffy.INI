@@ -61,6 +61,9 @@
     <None Include="ResultFiles\SerializeFluffyIgnore.ini">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="ResultFiles\SerializeOneLevelObject.ini">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="ResultFiles\SerializeTwoLevelObject.ini">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

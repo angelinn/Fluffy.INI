@@ -13,7 +13,15 @@ namespace Fluffy.Ini.Tests
         [Test]
         public void SerializeOneLevelObject()
         {
-            Assert.True(true);
+            OneLevelObject oneLevel = new OneLevelObject
+            {
+                OneSettings = 69,
+                OtherSettings = 123
+            };
+            string ini = FluffyConverter.SerializeObject(oneLevel).Trim().Replace("\r\n", "\n");
+            string original = File.ReadAllText(BuildIniFilePath("SerializeOneLevelObject.ini")).Trim().Replace("\r\n", "\n");
+
+            Assert.AreEqual(original, ini);
         }
 
         [Test]

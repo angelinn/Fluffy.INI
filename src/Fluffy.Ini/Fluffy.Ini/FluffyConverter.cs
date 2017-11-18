@@ -13,19 +13,23 @@ namespace Fluffy.Ini
         public static string SerializeObject<T>(T target) where T : class
         {
             FluffyWriter writer = new FluffyWriter();
-
-            foreach (PropertyInfo section in FluffyTypeReflector.GetSectionTypes<T>())
+            IEnumerable<PropertyInfo> sections = FluffyTypeReflector.GetSectionTypes<T>();
+            if (sections.Count() > 0)
             {
-                writer.WriteSection(section.Name);
-
-                object propertyValue = section.GetValue(target);
-                foreach (PropertyInfo attribute in FluffyTypeReflector.GetAttributeTypes(propertyValue.GetType()))
+                foreach (PropertyInfo section in sections)
                 {
-                    if (FluffyTypeReflector.TryGetComment(attribute, out FluffyComment comment))
-                        writer.WriteComment(comment.Content);
+                    writer.WriteSection(section.Name);
 
-                    writer.WriteAttribute(attribute.Name, attribute.GetValue(propertyValue).ToString());
+                    object propertyValue = section.GetValue(target);
+                    WriteAttributes(propertyValue, writer);
+
+                    writer.EndSection();
                 }
+            }
+            else
+            {
+                writer.WriteSection(typeof(T).Name);
+                WriteAttributes(target, writer);
                 writer.EndSection();
             }
 
@@ -76,6 +80,17 @@ namespace Fluffy.Ini
             }
 
             return target;
+        }
+
+        private static void WriteAttributes(object propertyValue, FluffyWriter writer)
+        {
+            foreach (PropertyInfo attribute in FluffyTypeReflector.GetAttributeTypes(propertyValue.GetType()))
+            {
+                if (FluffyTypeReflector.TryGetComment(attribute, out FluffyComment comment))
+                    writer.WriteComment(comment.Content);
+
+                writer.WriteAttribute(attribute.Name, attribute.GetValue(propertyValue).ToString());
+            }
         }
     }
 }
