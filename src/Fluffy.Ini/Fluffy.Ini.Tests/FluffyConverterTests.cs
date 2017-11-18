@@ -25,8 +25,8 @@ namespace Fluffy.Ini.Tests
             testObj.OtherSection.OneSettings = 30;
             testObj.OtherSection.OtherSettings = 40;
 
-            string ini = FluffyConverter.SerializeObject(testObj).Trim();
-            string original = File.ReadAllText(BuildIniFilePath("SerializeTwoLevelObject.ini")).Trim();
+            string ini = FluffyConverter.SerializeObject(testObj).Trim().Replace("\r\n", "\n");
+            string original = File.ReadAllText(BuildIniFilePath("SerializeTwoLevelObject.ini")).Trim().Replace("\r\n", "\n");
             Assert.AreEqual(original, ini);
         }
 
