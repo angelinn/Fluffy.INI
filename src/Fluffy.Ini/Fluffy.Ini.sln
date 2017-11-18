@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27004.2006
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fluffy.Ini", "Fluffy.Ini\Fluffy.Ini.csproj", "{76A9E5CB-29C1-480C-BD46-C453818309CB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fluffy.Ini", "Fluffy.Ini\Fluffy.Ini.csproj", "{76A9E5CB-29C1-480C-BD46-C453818309CB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fluffy.Ini.Console", "Fluffy.Ini.Console\Fluffy.Ini.Console.csproj", "{463B2D0E-7645-4D42-A468-5FDBD3342133}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fluffy.Ini.Tests", "Fluffy.Ini.Tests\Fluffy.Ini.Tests.csproj", "{1888EA65-80AD-4961-A53E-EF93BD45DA19}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{463B2D0E-7645-4D42-A468-5FDBD3342133}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{463B2D0E-7645-4D42-A468-5FDBD3342133}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{463B2D0E-7645-4D42-A468-5FDBD3342133}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1888EA65-80AD-4961-A53E-EF93BD45DA19}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1888EA65-80AD-4961-A53E-EF93BD45DA19}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1888EA65-80AD-4961-A53E-EF93BD45DA19}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1888EA65-80AD-4961-A53E-EF93BD45DA19}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
