@@ -5,6 +5,7 @@
 Fluffy.Ini is a .NET Standard and .NET Framework serializer that converts classes to ini configuration files.
 
 
+## Sections
 1. [How to use?](#how-to-use)
 
 2. [Serialization](#serialization)
