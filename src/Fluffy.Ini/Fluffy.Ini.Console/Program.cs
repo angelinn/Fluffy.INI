@@ -8,19 +8,21 @@ using System.Threading.Tasks;
 
 namespace Fluffy.Ini.Console
 {
-    public class Settings
-    {
-        public int Volume { get; set; }
 
-        [FluffyComment("Wow, a comment!")]
-        public string Name { get; set; }
+    public class DisplaySettings
+    {
+        public string Resolution { get; set; }
     }
 
-    public class IniFile
+    public class VolumeSettings
     {
-        [FluffyIgnore]
-        public string Wut { get; set; }
-        public Settings Settings { get; set; }
+        public int Volume { get; set; }
+    }
+
+    public class Settings
+    {
+        public DisplaySettings Display { get; set; }
+        public VolumeSettings Volume { get; set; }
     }
 
     class Program
@@ -39,8 +41,21 @@ namespace Fluffy.Ini.Console
 
             // File.WriteAllText("config.ini", ini);
 
-            string ini = File.ReadAllText("config.ini");
-            IniFile file = FluffyConverter.DeserializeObject<IniFile>(ini);
+            Settings settings = new Settings
+            {
+                Display = new DisplaySettings
+                {
+                    Resolution = "1920x1080"
+                },
+                Volume = new VolumeSettings
+                {
+                    Volume = 80
+                }
+            };
+
+            File.WriteAllText("config.ini", FluffyConverter.SerializeObject(settings));
+            //string ini = File.ReadAllText("config.ini");
+            //IniFile file = FluffyConverter.DeserializeObject<IniFile>(ini);
         }
     }
 }
