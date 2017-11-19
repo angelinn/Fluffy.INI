@@ -4,6 +4,22 @@
 ## What is Fluffy.Ini?
 Fluffy.Ini is a .NET Standard and .NET Framework serializer that converts classes to ini configuration files.
 
+
+1. [How to use?](#how-to-use)
+
+2. [Serialization](#serialization)
+
+3. [Deserialization](#deserialization)
+
+4. [FluffyIgnore](#fluffyignore)
+
+5. [FluffyComment](#fluffycomment)
+
+6. [Why?](#why)
+
+7. [License](#license)
+
+
 ## How to use?
 The main class is FluffyConverter.
 
@@ -98,6 +114,28 @@ Volume=80
 ```C#
 string ini = File.ReadAllText("config.ini");
 Settings settings = FluffyConverter.DeserializeObject<Settings>(ini);
+```
+
+### FluffyIgnore
+You can ignore a certain property putting the ```[FluffyIgnore]``` attribute above it
+```C#
+public class Settings
+{
+    [FluffyIgnore]
+    public int SettingID { get; set; }
+    public int Volume { get; set; }
+}
+```
+
+
+### FluffyComment
+Want a comment in your ini file? Sure.
+```C#
+public class Settings
+{
+    [FluffyComment("Wow. What a configuration setting!")]
+    public int Volume { get; set; }
+}
 ```
 
 ## Why?
