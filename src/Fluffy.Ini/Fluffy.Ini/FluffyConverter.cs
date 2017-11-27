@@ -96,10 +96,14 @@ namespace Fluffy.Ini
         {
             foreach (PropertyInfo attribute in FluffyTypeReflector.GetAttributeTypes(propertyValue.GetType()))
             {
+                string name = attribute.Name;
                 if (FluffyTypeReflector.TryGetComment(attribute, out FluffyComment comment))
                     writer.WriteComment(comment.Content);
 
-                writer.WriteAttribute(attribute.Name, attribute.GetValue(propertyValue).ToString());
+                if (FluffyTypeReflector.TryGetAlternativeName(attribute, out FluffyProperty property))
+                    name = property.PropertyName;
+
+                writer.WriteAttribute(name, attribute.GetValue(propertyValue).ToString());
             }
         }
     }

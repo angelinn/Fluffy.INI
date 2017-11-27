@@ -25,5 +25,11 @@ namespace Fluffy.Ini
             comment = (FluffyComment)info.GetCustomAttributes().FirstOrDefault(a => a is FluffyComment);
             return (comment != null);
         }
+
+        public static bool TryGetAlternativeName(PropertyInfo info, out FluffyProperty property)
+        {
+            property = (FluffyProperty)info.GetCustomAttributes().FirstOrDefault(p => p is FluffyProperty);
+            return (property != null);
+        }
     }
 }
