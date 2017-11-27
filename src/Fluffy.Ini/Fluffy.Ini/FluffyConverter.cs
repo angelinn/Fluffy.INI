@@ -79,7 +79,8 @@ namespace Fluffy.Ini
 
                 foreach (KeyValuePair<string, string> att in reader.GetAttributes(lines[i]))
                 {
-                    PropertyInfo currentAttribute = attributes.FirstOrDefault(a => a.Name == att.Key);
+                    PropertyInfo currentAttribute = attributes.FirstOrDefault(a => a.Name == att.Key ||
+                                (a.GetCustomAttribute<FluffyProperty>()?.PropertyName == att.Key));
 
                     if (currentAttribute != null)
                     {
