@@ -22,13 +22,13 @@ namespace Fluffy.Ini
 
         public static bool TryGetComment(PropertyInfo info, out FluffyComment comment)
         {
-            comment = (FluffyComment)info.GetCustomAttributes().FirstOrDefault(a => a is FluffyComment);
+            comment = info.GetCustomAttribute<FluffyComment>();
             return (comment != null);
         }
 
         public static bool TryGetAlternativeName(PropertyInfo info, out FluffyProperty property)
         {
-            property = (FluffyProperty)info.GetCustomAttributes().FirstOrDefault(p => p is FluffyProperty);
+            property = info.GetCustomAttribute<FluffyProperty>();
             return (property != null);
         }
     }
